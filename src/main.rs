@@ -14,20 +14,31 @@ struct Cipher {
 
 impl Cipher {
     fn show_positions(self) {
-        let shift = match self.shift_dir {
-            Direction::Right => self.shift_num,
-            Direction::Left => self.shift_num + 25,
-            Direction::Neither => 0usize,
+        let shift: i32 = match self.shift_dir {
+            Direction::Right => self.shift_num as i32,
+            Direction::Left => -(self.shift_num as i32),
+            Direction::Neither => 0i32,
         };
+
         let mut crypted_message = String::new();
         for c in self.corpus.chars() {
             if c.is_alphabetic() {
                 let corpus_loc = ALPHA.iter().position(|&a| a == c );
                 if corpus_loc.is_some() {
-                    let actual = corpus_loc.unwrap();
-                    let mut crypted_pos = actual + shift;
-                    if crypted_pos > 25 {
-                        crypted_pos = crypted_pos - 25;
+                    let actual = corpus_loc.unwrap() as i32;
+                    let mut crypted_pos: usize;
+                    if shift < 0 {
+                        if actual + shift > 0 {
+                            crypted_pos = ((actual + shift) as usize);
+                        } else {
+                            crypted_pos = (actual + shift + 25) as usize;
+                        }
+                    } else {
+                        if actual + shift > 25 {
+                            crypted_pos = (actual + shift - 25) as usize;
+                        } else {
+                            crypted_pos = (actual + shift) as usize;
+                        }
                     }
                     let crypted = ALPHA[crypted_pos];
                     crypted_message.push(crypted);
@@ -41,13 +52,15 @@ impl Cipher {
 }
 
 fn main() {
-    let mut cipher = Cipher {
+    let cipher = Cipher {
         shift_num: 2,
         shift_dir: Direction::Right,
         corpus: "that thing. did you get that thing i sent you.".to_string()
     };
 
-    let mut reverse_cipher = Cipher {
+    cipher.show_positions();
+
+    let reverse_cipher = Cipher {
         shift_num: 4,
         shift_dir: Direction::Left,
         corpus: "System check identified 1 issue (0 silenced).
@@ -57,6 +70,5 @@ fn main() {
             Quit the server with CONTROL-C.".to_string()
     };
 
-    cipher.show_positions();
     reverse_cipher.show_positions()
 }
