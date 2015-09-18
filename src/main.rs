@@ -8,12 +8,11 @@ enum Direction {
 
 struct Cipher {
     shift_num: usize,
-    shift_dir: Direction,
-    corpus: String
+    shift_dir: Direction
 }
 
 impl Cipher {
-    fn show_positions(self) {
+    fn encode(self, message: &str) -> String {
         let shift: i32 = match self.shift_dir {
             Direction::Right => self.shift_num as i32,
             Direction::Left => -(self.shift_num as i32),
@@ -21,7 +20,7 @@ impl Cipher {
         };
 
         let mut crypted_message = String::new();
-        for c in self.corpus.chars() {
+        for c in message.chars() {
             if c.is_alphabetic() {
                 let corpus_loc = ALPHA.iter().position(|&a| a == c );
                 if corpus_loc.is_some() {
@@ -47,28 +46,43 @@ impl Cipher {
                 crypted_message.push(c);
             }
         }
-        println!("{}", crypted_message);
+
+        crypted_message
+    }
+
+    fn decode(&self, encrypted_msg: &str) -> String {
+        let shift = match self.shift_dir {
+            Direction::Right => -(self.shift_num as i32),
+            Direction::Left => self.shift_num as i32,
+            Direction::Neither => 0i32
+        };
+
+        for c in encrypted_msg.chars() {
+            println!("{}", c);
+        }
+
+        String::new()
     }
 }
 
 fn main() {
     let cipher = Cipher {
         shift_num: 2,
-        shift_dir: Direction::Right,
-        corpus: "that thing. did you get that thing i sent you.".to_string()
+        shift_dir: Direction::Right
     };
 
-    cipher.show_positions();
+    let first_message = cipher.encode("that thing. did you get that thing i sent you.");
 
     let reverse_cipher = Cipher {
         shift_num: 4,
-        shift_dir: Direction::Left,
-        corpus: "System check identified 1 issue (0 silenced).
-            September 16, 2015 - 21:27:47
-            Django version 1.8.4, using settings 'doc.settings.local'
-            Starting development server at http://127.0.0.1:8000/
-            Quit the server with CONTROL-C.".to_lowercase().to_string()
+        shift_dir: Direction::Left
     };
 
-    reverse_cipher.show_positions()
+    let encrypted = reverse_cipher.encode("System check identified 1 issue (0 silenced).
+        September 16, 2015 - 21:27:47
+        Django version 1.8.4, using settings 'doc.settings.local'
+        Starting development server at http://127.0.0.1:8000/
+        Quit the server with CONTROL-C.");
+
+    println!("{}", encrypted);
 }
