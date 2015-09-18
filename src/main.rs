@@ -1,4 +1,4 @@
-const ALPHA: [char; 26] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'y', 'x', 'z'];
+const ALPHA: [char; 26] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
 enum Direction {
     Left,
@@ -67,7 +67,7 @@ fn main() {
             September 16, 2015 - 21:27:47
             Django version 1.8.4, using settings 'doc.settings.local'
             Starting development server at http://127.0.0.1:8000/
-            Quit the server with CONTROL-C.".to_string()
+            Quit the server with CONTROL-C.".to_lowercase().to_string()
     };
 
     reverse_cipher.show_positions()
