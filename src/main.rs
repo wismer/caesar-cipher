@@ -19,13 +19,13 @@ impl Cipher {
                 let actual = corpus_loc.unwrap() as i32;
                 let mut crypted_pos: usize;
                 if shift < 0 {
-                    if actual + shift > 0 {
+                    if actual + shift >= 0 {
                         crypted_pos = ((actual + shift) as usize);
                     } else {
                         crypted_pos = (actual + shift + 25) as usize;
                     }
                 } else {
-                    if actual + shift > 25 {
+                    if actual + shift >= 25 {
                         crypted_pos = (actual + shift - 25) as usize;
                     } else {
                         crypted_pos = (actual + shift) as usize;
@@ -40,6 +40,7 @@ impl Cipher {
     }
 
     fn encode(&self, message: &str) -> String {
+        let formatted_message = message.to_lowercase();
         let shift: i32 = match self.shift_dir {
             Direction::Right => self.shift_num as i32,
             Direction::Left => -(self.shift_num as i32),
@@ -48,7 +49,7 @@ impl Cipher {
 
         let mut crypted_message = String::new();
 
-        for c in message.chars() {
+        for c in formatted_message.chars() {
             &self.process(c, &mut crypted_message, shift);
         }
 
@@ -78,21 +79,24 @@ fn main() {
         shift_dir: Direction::Right
     };
 
-    let first_message = cipher.encode("that thing. did you get that thing i sent you.");
+    let encrypted = cipher.encode("that thing. did you get that thing i sent you.");
 
     let reverse_cipher = Cipher {
         shift_num: 4,
         shift_dir: Direction::Left
     };
 
-    let encrypted = reverse_cipher.encode("System check identified 1 issue (0 silenced).
+    let encrypted_reverse = reverse_cipher.encode("System check identified 1 issue (0 silenced).
         September 16, 2015 - 21:27:47
         Django version 1.8.4, using settings 'doc.settings.local'
         Starting development server at http://127.0.0.1:8000/
         Quit the server with CONTROL-C.");
 
     {
-        let decrypted = reverse_cipher.decode(&encrypted);
+        let decrypted_reverse = reverse_cipher.decode(&encrypted_reverse);
+        println!("{}", decrypted_reverse);
+
+        let decrypted = cipher.decode(&encrypted);
         println!("{}", decrypted);
     }
 }
