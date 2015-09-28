@@ -2,3 +2,7 @@
 name = "caesar-cipher"
 version = "0.1.0"
 authors = ["wismer <matthewhl@gmail.com>"]
+
+[dependencies]
+iron = "*"
+serde_json = "0.6.0"
