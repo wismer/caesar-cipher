@@ -11,6 +11,10 @@ struct Cipher {
     shift_dir: Direction
 }
 
+mod euler {
+    pub mod euler;
+}
+
 impl Cipher {
     fn process(&self, c: char, buffer: &mut String, shift: i32) {
         if c.is_alphabetic() {
@@ -102,4 +106,6 @@ fn main() {
         let decrypted = cipher.decode(&encrypted);
         println!("{}", decrypted);
     }
+
+    euler::euler::resolve();
 }
