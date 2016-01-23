@@ -107,5 +107,5 @@ fn main() {
         println!("{}", decrypted);
     }
 
-    euler::euler::resolve();
+    euler::euler::resolve(0);
 }
